@@ -21,3 +21,4 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+.next/static/webpack/054083860cc709c2a4eb.webpack.hot-update.json
