@@ -28,3 +28,5 @@ hs_err_pid*
 .eslintrc.json
 package.json
 package-lock.json
+package-lock.json
+next.config.js
