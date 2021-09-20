@@ -8,7 +8,7 @@ function Navigator() {
           <Link href="/">Home</Link>
         </li>
         <li>
-          <Link href="/myPage">myPage</Link>
+          <Link href="/Register">Register</Link>
         </li>
         <li>
           <Link href="/EditPage">EditPage</Link>
