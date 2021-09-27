@@ -1,7 +1,10 @@
 import Editor, { useMonaco } from "@monaco-editor/react";
 import React, { useRef, useState } from "react";
-function MonacoEditor() {
-  const fs = require("fs");
+import { useRouter } from "next/router";
+
+const MonacoEditor = ({ data }) => {
+  var testfile;
+  const router = useRouter();
   const baseLanguage = "html";
   const [SelectedLang, setSelectedLang] = useState("html");
 
@@ -19,8 +22,17 @@ function MonacoEditor() {
     monaco.languages.typescript.javascriptDefaults.setEagerModelSync(true);
   }
 
-  function RunPage() {
-    fs.writeFile("../pages/Runnable.js", editorRef.current.getValue());
+  async function RunPage() {
+    const editorContent = editorRef.current.getValue();
+    const response = await fetch("/api/saveData", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({ editorContent }),
+    });
+    router.push("/Runnable");
+    // fs.writeFile("../pages/Runnable.js", editorRef.current.getValue());
   }
   //Sima OnChange müvelet de nem baj ha itt van legalább látszik
   function handleEditorChange(value, event) {
@@ -46,6 +58,6 @@ function MonacoEditor() {
       />
     </>
   );
-}
+};
 
 export default MonacoEditor;
