@@ -34,5 +34,25 @@ class dbconect {
       );
     });
   }
+  getUserByEmail(email) {
+    return new Promise((resolve) => {
+      var temp = {};
+      this.server.query(
+        'SELECT * from userauthdata where userMail = "' + email + '"',
+        (error, results, fields) => {
+          temp = handler(error, results, fields);
+          console.log(temp);
+          if (temp.length > 0) {
+            temp = temp[0];
+            temp.status = "OK";
+          } else {
+            temp = { status: "NotFound" };
+          }
+          console.log(temp);
+          resolve(temp);
+        }
+      );
+    });
+  }
 }
 module.exports = dbconect;

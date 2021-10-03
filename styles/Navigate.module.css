@@ -8,9 +8,11 @@
 .nav ul {
   list-style-type: none;
   display: table;
+  width: 100%;
 }
 .nav li {
   display: table-cell;
+  float: left;
 }
 .nav a,
 #loginLabel {
@@ -72,4 +74,22 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+.nav li:last-child {
+  float: right;
+  margin-right: 20px;
+}
+.user {
+  display: inline-flex;
+  align-items: center;
+  color: #ffffff;
+}
+.user img {
+  height: 1.6em;
+  margin-left: 10px;
+  margin-right: 20px;
+}
+.user p {
+  margin-top: 0px;
+  margin-bottom: 0px;
 }

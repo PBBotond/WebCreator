@@ -1,7 +1,22 @@
 import Link from "next/link";
 import navStyle from "../styles/Navigate.module.css";
-import Login_Signup from "./Login_Signup";
+import { signIn, signOut, useSession } from "next-auth/client";
 function Navigator() {
+  const [session, loadingSession] = useSession();
+  const logbut = loadingSession ? (
+    <p>Loading...</p>
+  ) : session ? (
+    <>
+      <div className={navStyle.user}>
+        <p>Hi {session.user.name}</p>
+        <span />
+        <img src={session.user.image} />
+      </div>
+      <a onClick={signOut}>SignOut</a>
+    </>
+  ) : (
+    <Link href="/LogSig">Login/Sign</Link>
+  );
   return (
     <>
       <nav className={navStyle.nav}>
@@ -10,14 +25,9 @@ function Navigator() {
             <Link href="/">Home</Link>
           </li>
           <li>
-            <Link href="/Register">Register</Link>
-          </li>
-          <li>
             <Link href="/EditPage">EditPage</Link>
           </li>
-          <li>
-            <Login_Signup />
-          </li>
+          <li>{logbut}</li>
         </ul>
       </nav>
     </>

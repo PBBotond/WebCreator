@@ -1,3 +1,1 @@
-function(data){
-    console.lo
-}
+<input type="submit">Kűldés</input>
