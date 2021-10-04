@@ -1,63 +1,89 @@
 import Link from "next/dist/client/link";
 import LogPage from "../styles/LogPage.module.css";
-import React, { Component } from "react";
+import { useForm } from "react-hook-form";
 import { signIn, signOut, useSession } from "next-auth/client";
 import { loginIn } from "../lib/auth";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
+import { useRouter } from "next/router";
+import AuthContext from "../DB/ContextStore";
+import { useContext } from "react";
 
-export default class LoginForm extends Component {
-  state = {
-    email: "",
-    password: "",
+export default function LoginForm() {
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().required("Email is required").email("Email is invalid"),
+    password: Yup.string().required("Password is required"),
+  });
+  const formOptions = { resolver: yupResolver(validationSchema) };
+  const { register, handleSubmit, reset, formState } = useForm(formOptions);
+  const { errors } = formState;
+  const activeUserCont = useContext(AuthContext);
+  //console.log("Login");
+  //console.log(activeUserCont);
+  const route = useRouter();
+
+  const SubmitHandler = async (event) => {
+    const { email, password } = event;
+    console.log("Start");
+    const result = await loginIn(email, password, "Custom");
+    console.log(result);
+    if (result.Message === "OK") {
+      activeUserCont.SetactiveUser({
+        name: result.userName,
+        email,
+        image: "/DefaultUser.jpg",
+      });
+      route.push("/");
+    }
   };
-  handleChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
-  SubmitHandler = (event) => {
-    event.preventDefault();
-    const { email, password } = this.state;
-    loginIn(email, password, "Custom");
-  };
-  render() {
-    return (
-      <div className={LogPage.container}>
-        <div>
-          <p className={LogPage.Title}>
-            Web <span className={LogPage.loginPSubtitle}>Creator</span>
-          </p>
-          <form className={LogPage.FormContent} onSubmit={this.SubmitHandler}>
-            <input
-              type="text"
-              name="email"
-              placeholder="Email"
-              className={LogPage.loginForm}
-              onChange={this.handleChange}
-            />
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              className={LogPage.loginForm}
-              onChange={this.handleChange}
-            />
-            <input type="submit" value="Login" className={LogPage.loginBtn} />
-          </form>
-          <div className={LogPage.FormContent}>
-            <Link href="/ForgetPassword">Forget Password</Link>
+  return (
+    <div className={LogPage.container}>
+      <div>
+        <p className={LogPage.Title}>
+          Web <span className={LogPage.loginPSubtitle}>Creator</span>
+        </p>
+        <form
+          className={LogPage.FormContent}
+          onSubmit={handleSubmit(SubmitHandler)}
+        >
+          <input
+            type="text"
+            name="email"
+            {...register("email")}
+            placeholder="Email"
+            className={LogPage.loginForm}
+          />
+          <div className={LogPage.invalidFeedback}>
+            {errors.email?.message}
+          </div>
+          <input
+            type="password"
+            name="password"
+            {...register("password")}
+            placeholder="Password"
+            className={LogPage.loginForm}
+          />
+          <div className={LogPage.invalidFeedback}>
+            {errors.password?.message}
+          </div>
+          <input type="submit" value="Login" className={LogPage.loginBtn} />
+        </form>
+        <div className={LogPage.FormContent}>
+          <Link href="/ForgetPassword">Forget Password</Link>
+          <br />
+          <input
+            type="button"
+            value="Login with Google"
+            onClick={signIn}
+            className={LogPage.loginBtn}
+          />
+          <div>
+            <b>Don't have an account?</b>
             <br />
-            <input
-              type="button"
-              value="Login with Google"
-              onClick={signIn}
-              className={LogPage.loginBtn}
-            />
-            <div>
-              <b>Don't have an account?</b>
-              <br />
-              <Link href="/Register">Register</Link>
-            </div>
+            <Link href="/Register">Register</Link>
           </div>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }

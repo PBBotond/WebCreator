@@ -4,8 +4,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { RegNewUser } from "../lib/reg";
 import { useRouter } from "next/router";
+import { useContext } from "react";
+import AuthContext from "../DB/ContextStore";
+
 export default function RegForm() {
   const route = useRouter();
+  const activeUserCont = useContext(AuthContext);
+  //Options of Validation
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
     email: Yup.string().required("Email is required").email("Email is invalid"),
@@ -16,19 +21,26 @@ export default function RegForm() {
       .oneOf([Yup.ref("password"), null], "Passwords must match")
       .required("Confirm Password is required"),
   });
+  //Registering the validation options
   const formOptions = { resolver: yupResolver(validationSchema) };
-
   const { register, handleSubmit, reset, formState } = useForm(formOptions);
   const { errors } = formState;
+  //What happen when the user submit the form
   const SubmitHandler = async (event) => {
     const { name, email, password } = event;
     console.log(event);
     const result = await RegNewUser(name, email, password, "Custom");
     console.log(result);
     if (result.Message === "New User Created") {
+      activeUserCont.SetactiveUser({
+        name,
+        email,
+        image: "/DefaultUser.jpg",
+      });
       route.push("/");
     }
   };
+
   return (
     <div className={LogPage.container}>
       <div>
@@ -46,7 +58,9 @@ export default function RegForm() {
             placeholder="Name"
             className={LogPage.loginForm}
           />
-          <div className="invalid-feedback">{errors.name?.message}</div>
+          <div className={LogPage.invalidFeedback}>
+            {errors.name?.message}
+          </div>
           <input
             type="text"
             name="email"
@@ -54,7 +68,9 @@ export default function RegForm() {
             placeholder="Email"
             className={LogPage.loginForm}
           />
-          <div className="invalid-feedback">{errors.email?.message}</div>
+          <div className={LogPage.invalidFeedback}>
+            {errors.email?.message}
+          </div>
           <input
             type="password"
             name="password"
@@ -62,7 +78,9 @@ export default function RegForm() {
             placeholder="Password"
             className={LogPage.loginForm}
           />
-          <div className="invalid-feedback">{errors.password?.message}</div>
+          <div className={LogPage.invalidFeedback}>
+            {errors.password?.message}
+          </div>
           <input
             type="password"
             name="confirmPassword"
@@ -70,7 +88,7 @@ export default function RegForm() {
             placeholder="Confirm Password"
             className={LogPage.loginForm}
           />
-          <div className="invalid-feedback">
+          <div className={LogPage.invalidFeedback}>
             {errors.confirmPassword?.message}
           </div>
           <input type="submit" value="Register" className={LogPage.loginBtn} />

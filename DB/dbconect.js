@@ -58,7 +58,9 @@ class dbconect {
     return new Promise((resolve) => {
       var temp = {};
       this.server.query(
-        'INSERT INTO userauthdata (userMail,userPass,userSource) VALUES ("' +
+        'INSERT INTO userauthdata (userName,userMail,userPass,userSource) VALUES ("' +
+          dataLine.name +
+          '", "' +
           dataLine.email +
           '", "' +
           dataLine.password +
