@@ -6,7 +6,8 @@ export default async function AuthUser(req: NextApiRequest, res: NextApiResponse
     
     const db = new dbconnect(connectiondata);
     if (req.method === "POST") {
-        const { email, password } = req.body;
+        const { email, password ,source } = req.body;
+        console.log("AuthUser");
         console.log(req.body);
         
         const result = await db.getUserByEmail(email)

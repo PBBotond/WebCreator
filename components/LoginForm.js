@@ -1,8 +1,8 @@
 import Link from "next/dist/client/link";
-import { useState } from "react";
 import LogPage from "../styles/LogPage.module.css";
 import React, { Component } from "react";
 import { signIn, signOut, useSession } from "next-auth/client";
+import { loginIn } from "../lib/auth";
 
 export default class LoginForm extends Component {
   state = {
@@ -14,6 +14,8 @@ export default class LoginForm extends Component {
   };
   SubmitHandler = (event) => {
     event.preventDefault();
+    const { email, password } = this.state;
+    loginIn(email, password, "Custom");
   };
   render() {
     return (
@@ -37,15 +39,22 @@ export default class LoginForm extends Component {
               className={LogPage.loginForm}
               onChange={this.handleChange}
             />
+            <input type="submit" value="Login" className={LogPage.loginBtn} />
           </form>
-          <input
-            type="button"
-            value="Login"
-            className={LogPage.loginBtn}
-            onClick={signIn}
-          ></input>
           <div className={LogPage.FormContent}>
             <Link href="/ForgetPassword">Forget Password</Link>
+            <br />
+            <input
+              type="button"
+              value="Login with Google"
+              onClick={signIn}
+              className={LogPage.loginBtn}
+            />
+            <div>
+              <b>Don't have an account?</b>
+              <br />
+              <Link href="/Register">Register</Link>
+            </div>
           </div>
         </div>
       </div>

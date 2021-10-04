@@ -4,7 +4,9 @@ import { signIn, signOut, useSession } from "next-auth/client";
 function Navigator() {
   const [session, loadingSession] = useSession();
   const logbut = loadingSession ? (
-    <p>Loading...</p>
+    <div className={navStyle.user}>
+      <p>Loading...</p>
+    </div>
   ) : session ? (
     <>
       <div className={navStyle.user}>

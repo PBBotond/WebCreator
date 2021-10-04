@@ -54,5 +54,26 @@ class dbconect {
       );
     });
   }
+  regNewUser(dataLine) {
+    return new Promise((resolve) => {
+      var temp = {};
+      this.server.query(
+        'INSERT INTO userauthdata (userMail,userPass,userSource) VALUES ("' +
+          dataLine.email +
+          '", "' +
+          dataLine.password +
+          '", "' +
+          dataLine.source +
+          '")',
+        (error, results, fields) => {
+          temp = handler(error, results, fields);
+          if (temp.message === "") {
+            temp = { status: "OK" };
+          }
+          resolve(temp);
+        }
+      );
+    });
+  }
 }
 module.exports = dbconect;
