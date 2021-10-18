@@ -1,7 +1,10 @@
+import MonacoEditor from "../components/Editor";
+import "../styles/Editor.module.css";
 const EditPage = () => {
   return (
-    <div>
-      <h1>This is the Edit Page</h1>
+    <div className={"editorCanvas"}>
+      <h1>Editor</h1>
+      <MonacoEditor />;
     </div>
   );
 };

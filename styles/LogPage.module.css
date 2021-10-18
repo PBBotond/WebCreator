@@ -1,0 +1,71 @@
+.container {
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  margin: 5vh auto;
+  width: 500px;
+  padding: 30px;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+}
+.container p {
+  font-size: 30pt;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  color: #2f3542;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+.loginPSubtitle {
+  color: #5352ed;
+}
+.Title {
+  place-content: center;
+}
+.FormContent {
+  text-align: center;
+}
+
+.loginForm {
+  margin: 8px 0;
+  padding: 16px 12px;
+  width: 350px;
+  outline-style: none;
+  border: none;
+  font-size: 12pt;
+  font-weight: 500;
+  border: none;
+  border: solid 4px rgb(235, 235, 235);
+}
+
+.loginBtn {
+  width: 350px;
+  outlyne-style: none;
+  border: none;
+  background-color: #000000;
+  font-size: "Raleway";
+  font-weight: 700;
+  color: white;
+  font-size: 18pt;
+  padding: 16px 0px;
+  margin-top: 20px;
+  margin: 20px 0;
+  cursor: pointer;
+}
+
+.loginForm:focus {
+  border: solid 4px black;
+  transition: 0.2s;
+}
+
+.loginBtn:active {
+  outline-style: none;
+  border: none;
+}
+.invalidFeedback {
+  color: red;
+}
