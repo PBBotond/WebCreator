@@ -25,7 +25,8 @@ export default function RegForm() {
   const formOptions = { resolver: yupResolver(validationSchema) };
   const { register, handleSubmit, reset, formState } = useForm(formOptions);
   const { errors } = formState;
-  //What happen when the user submit the form
+
+  //What happen when the client click on the Register button
   const SubmitHandler = async (event) => {
     const { name, email, password } = event;
     console.log(event);
@@ -40,7 +41,7 @@ export default function RegForm() {
       route.push("/");
     }
   };
-
+  
   return (
     <div className={LogPage.container}>
       <div>
@@ -58,9 +59,7 @@ export default function RegForm() {
             placeholder="Name"
             className={LogPage.loginForm}
           />
-          <div className={LogPage.invalidFeedback}>
-            {errors.name?.message}
-          </div>
+          <div className={LogPage.invalidFeedback}>{errors.name?.message}</div>
           <input
             type="text"
             name="email"
@@ -68,9 +67,7 @@ export default function RegForm() {
             placeholder="Email"
             className={LogPage.loginForm}
           />
-          <div className={LogPage.invalidFeedback}>
-            {errors.email?.message}
-          </div>
+          <div className={LogPage.invalidFeedback}>{errors.email?.message}</div>
           <input
             type="password"
             name="password"

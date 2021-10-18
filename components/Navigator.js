@@ -3,14 +3,25 @@ import navStyle from "../styles/Navigate.module.css";
 import { signIn, signOut, useSession } from "next-auth/client";
 import { useContext } from "react";
 import AuthContext from "../DB/ContextStore";
-function Navigator() {
+import { InitData } from "../lib/initData";
+import { wipeToken } from "../lib/wipeToken";
+
+function SignOutHandler() {
+  wipeToken();
+  signOut();
+}
+
+export default function Navigator() {
   const activeUserCont = useContext(AuthContext);
   const [session, loadingSession] = useSession();
+  console.log(activeUserCont.activeUser.name);
   const logbut = loadingSession ? (
     <div className={navStyle.user}>
       <p>Loading...</p>
     </div>
-  ) : session || activeUserCont.activeUser.name !== "" ? (
+  ) : session ||
+    (activeUserCont.activeUser.name !== "" &&
+      activeUserCont.activeUser.name !== undefined) ? (
     <>
       <div className={navStyle.user}>
         <p>Hi {session ? session.user.name : activeUserCont.activeUser.name}</p>
@@ -19,7 +30,7 @@ function Navigator() {
           src={session ? session.user.image : activeUserCont.activeUser.image}
         />
       </div>
-      <a onClick={signOut}>SignOut</a>
+      <a onClick={SignOutHandler}>SignOut</a>
     </>
   ) : (
     <Link href="/LogSig">Login/Sign</Link>
@@ -40,5 +51,3 @@ function Navigator() {
     </>
   );
 }
-
-export default Navigator;

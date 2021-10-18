@@ -1,7 +1,7 @@
 import Link from "next/dist/client/link";
 import LogPage from "../styles/LogPage.module.css";
 import { useForm } from "react-hook-form";
-import { signIn, signOut, useSession } from "next-auth/client";
+import { signIn } from "next-auth/client";
 import { loginIn } from "../lib/auth";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
@@ -10,6 +10,10 @@ import AuthContext from "../DB/ContextStore";
 import { useContext } from "react";
 
 export default function LoginForm() {
+  const activeUserCont = useContext(AuthContext);
+  const route = useRouter();
+
+  // Form validation settings
   const validationSchema = Yup.object().shape({
     email: Yup.string().required("Email is required").email("Email is invalid"),
     password: Yup.string().required("Password is required"),
@@ -17,11 +21,8 @@ export default function LoginForm() {
   const formOptions = { resolver: yupResolver(validationSchema) };
   const { register, handleSubmit, reset, formState } = useForm(formOptions);
   const { errors } = formState;
-  const activeUserCont = useContext(AuthContext);
-  //console.log("Login");
-  //console.log(activeUserCont);
-  const route = useRouter();
 
+  //What happen when the client click on the Login button
   const SubmitHandler = async (event) => {
     const { email, password } = event;
     console.log("Start");
@@ -36,6 +37,8 @@ export default function LoginForm() {
       route.push("/");
     }
   };
+
+  //Source of the Login component
   return (
     <div className={LogPage.container}>
       <div>
@@ -53,9 +56,7 @@ export default function LoginForm() {
             placeholder="Email"
             className={LogPage.loginForm}
           />
-          <div className={LogPage.invalidFeedback}>
-            {errors.email?.message}
-          </div>
+          <div className={LogPage.invalidFeedback}>{errors.email?.message}</div>
           <input
             type="password"
             name="password"

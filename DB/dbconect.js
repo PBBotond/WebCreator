@@ -77,5 +77,77 @@ class dbconect {
       );
     });
   }
+  setFreshToken(mail, token) {
+    return new Promise((resolve) => {
+      var temp = {};
+      const actualDate = new Date().toISOString();
+      this.server.query(
+        'UPDATE logintable SET LastLoginDtu = "' +
+          actualDate +
+          '", userLastToken = "' +
+          token +
+          '" WHERE userMail = "' +
+          mail +
+          '"',
+        (error, results, fields) => {
+          temp = handler(error, results, fields);
+          console.log("Update");
+          console.log(temp);
+          if (temp.changedRows === 1) {
+            temp = { status: "OK" };
+          }
+          resolve(temp);
+        }
+      );
+    });
+  }
+  setToken(mail, token) {
+    return new Promise((resolve) => {
+      var temp = {};
+      const actualDate = new Date().toISOString();
+      this.server.query(
+        'INSERT INTO logintable (userMail,LastLoginDtu,userLastToken) VALUES ("' +
+          mail +
+          '", "' +
+          actualDate +
+          '", "' +
+          token +
+          '")',
+        (error, results, fields) => {
+          temp = handler(error, results, fields);
+          console.log("Insert Token");
+          console.log(temp);
+          if (temp.message === "") {
+            temp = { status: "OK" };
+          }
+          resolve(temp);
+        }
+      );
+    });
+  }
+  delToken(mail) {
+    return new Promise((resolve) => {
+      var temp = {};
+      const actualDate = new Date().toISOString();
+      this.server.query(
+        'UPDATE logintable SET LastLoginDtu = "' +
+          actualDate +
+          '", userLastToken = "' +
+          "" +
+          '" WHERE userMail = "' +
+          mail +
+          '"',
+        (error, results, fields) => {
+          temp = handler(error, results, fields);
+          console.log("Update");
+          console.log(temp);
+          if (temp.changedRows === 1) {
+            temp = { status: "OK" };
+          }
+          resolve(temp);
+        }
+      );
+    });
+  }
 }
 module.exports = dbconect;
