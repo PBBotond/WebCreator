@@ -28,7 +28,7 @@ export default function Navigator() {
         <span />
         <img
           src={session ? session.user.image : activeUserCont.activeUser.image}
-        />
+        ></img>
       </div>
       <a onClick={SignOutHandler}>SignOut</a>
     </>
