@@ -5,7 +5,7 @@ const connectiondata = {
     database: "nextdb",
     port: 3306,
   },
-  tables: ["test", "userData"],
+  tables: ["test", "userData", "userFiles"],
 };
 /*
 const config = {

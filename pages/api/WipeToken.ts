@@ -8,18 +8,20 @@ export default async function WipeToken(req: NextApiRequest, res: NextApiRespons
     if (req.method==="POST") {
         const db = new dbconnect(connectiondata);
         if (req.cookies !== undefined) {
+            
             const email = verify(req.cookies.AuthToken, process.env.AUTHSECRET)
             const result = await db.getUserByEmail(email)
             if (result.status === "OK") {
                 db.delToken(email);
                 console.log("DELETE TOKEN");
-                
                 res.setHeader("Set-Cookie",
                 cookie.serialize("AuthToken", "", {
                     httpOnly: true,
                     maxAge: 0,
                      path:"/"
                 }));
+                
+                
                 res.json({message:"TokenWiped"})
             }
         } else {
