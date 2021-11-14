@@ -4,7 +4,7 @@ import FileManagger from "../components/FileManagger";
 import { getActualUserFile } from "../lib/getActuallUserFiles";
 import { useEffect, useState } from "react";
 const EditPage = ({ userId }) => {
-  const [SelectedFile, setSelectedFile] = useState("html");
+  const [SelectedFile, setSelectedFile] = useState("");
   const [l1Files, setl1Files] = useState([]);
   function refreshFiles() {
     getActualUserFile(userId).then((response) => {
@@ -20,6 +20,7 @@ const EditPage = ({ userId }) => {
           refreshFiles={refreshFiles}
           l1Files={l1Files}
           refreshEditor={setSelectedFile}
+          selectedfile={SelectedFile}
         />
         <div className={EditorPage.Editor}>
           <MonacoEditor

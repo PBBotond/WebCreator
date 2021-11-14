@@ -26,3 +26,6 @@
 .Editor {
   height: 70vh;
 }
+.selected{
+  background-color: darkslateblue;
+}

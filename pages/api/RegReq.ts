@@ -2,7 +2,10 @@ import { NextApiResponse, NextApiRequest } from "next";
 import dbconnect from '../../DB/dbconect'
 import connectiondata from '../../DB/dbconfig'
 import fs from "fs";
-
+const base_html =
+  '<!DOCTYPE html><html lang="en">\n<head>\n<meta charset="UTF-8">\n<meta http-equiv="X-UA-Compatible" content="IE=edge">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>Document</title>\n</head>\n<body>\n</body>\n \n</html>';
+const base_js = "";
+const base_css = "";
 function CreateUserFolder(id) {
     const dir = 'DB/SavedFiles/' + id;
     console.log("CreateNewFoler");
@@ -11,15 +14,15 @@ function CreateUserFolder(id) {
         fs.mkdirSync(dir, {
             recursive: true
         });
-        fs.writeFile(dir+'/starter.html', '', function (err) {
+        fs.writeFile(dir+'/starter.html',base_html, function (err) {
             if (err) throw err;
             console.log('File is created successfully.');
         })
-        fs.writeFile(dir+'/starter.js', '', function (err) {
+        fs.writeFile(dir+'/starter.js', base_js, function (err) {
             if (err) throw err;
             console.log('File is created successfully.');
         })
-        fs.writeFile(dir+'/starter.css', '', function (err) {
+        fs.writeFile(dir+'/starter.css', base_css, function (err) {
             if (err) throw err;
             console.log('File is created successfully.');
         })
