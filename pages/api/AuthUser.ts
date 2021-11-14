@@ -20,12 +20,18 @@ export default async function AuthUser(req: NextApiRequest, res: NextApiResponse
             if (result.userPass === password) {
                 const refToken = await db.setFreshToken(email, newToken)
                 if (refToken.status === "OK") {
-                    res.setHeader("Set-Cookie",
+                    res.setHeader("Set-Cookie",[
                         cookie.serialize("AuthToken", newToken, {
                             httpOnly: true,
                             maxAge: 3600,
                             path:"/"
-                        }));
+                        }),
+                        cookie.serialize("UserId", result.id, {
+                            httpOnly: false,
+                            maxAge: 3600,
+                            path:"/"
+                        })
+                    ]);
                     res.json({
                         Message: "OK",
                         userName: result.userName

@@ -1,39 +1,34 @@
-import { useState } from "react";
+import { Component, useEffect, useState } from "react";
 import EditorPage from "../styles/Editor.module.css";
-var temp = ["alma", "korte", "barack", "kacsa", "mama", "tata"];
-var temp2 = ["alma", "korte", "barack", "kacsa", "mama", "tata"];
-
-const FileManagger = () => {
-  const [listItem, setlistItem] = useState(temp);
-  const [listItemlev, setlistItemlev] = useState(null);
-
-  function generateDeeper(index) {
-    const result = [{ i: index, data: temp2 }];
-    setlistItemlev(result);
+import { getActualUserFile } from "../lib/getActuallUserFiles";
+export class FileManagger extends Component {
+  constructor(props) {
+    super(props);
+  }
+  async componentDidMount() {
+    this.props.refreshFiles();
   }
 
-  return (
-    <div className={EditorPage.Files}>
-      <ul>
-        {listItem.map((elem, i) => {
-          var listRs = <li onClick={() => generateDeeper(i)}>{elem}</li>;
-          listItemlev?.map((elemlev, t) => {
-            if (elemlev.i == t) {
-              var actualData = elemlev.data;
-              listRs = (
-                <>
-                  {listRs}
-                  {actualData.map((listelem) => (
-                    <li onClick={() => generateDeeper(i)}>{listelem}</li>
-                  ))}
-                </>
-              );
-            }
-          });
-          return listRs;
-        })}
-      </ul>
-    </div>
-  );
-};
+  ClickHandler(type, Name) {
+    //console.log(type, Name);
+    
+  }
+  render() {
+    return (
+      <div className={EditorPage.Files}>
+        <ul>
+          {this.props.l1Files.map((elem, i) => {
+            console.log(elem);
+            var listRs = (
+              <li onClick={() => this.ClickHandler(elem.type, elem.fileName)}>
+                {elem.fileName}
+              </li>
+            );
+            return listRs;
+          })}
+        </ul>
+      </div>
+    );
+  }
+}
 export default FileManagger;

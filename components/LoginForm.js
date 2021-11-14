@@ -7,7 +7,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
 import AuthContext from "../DB/ContextStore";
-import { useContext } from "react";
+import { useContext,useState } from "react";
 
 export default function LoginForm() {
   const activeUserCont = useContext(AuthContext);
@@ -21,6 +21,7 @@ export default function LoginForm() {
   const formOptions = { resolver: yupResolver(validationSchema) };
   const { register, handleSubmit, reset, formState } = useForm(formOptions);
   const { errors } = formState;
+  const [authRes, setauthRes] = useState("");
 
   //What happen when the client click on the Login button
   const SubmitHandler = async (event) => {
@@ -35,6 +36,8 @@ export default function LoginForm() {
         image: "/DefaultUser.jpg",
       });
       route.push("/");
+    } else {
+      setauthRes("Password email comper is not found");
     }
   };
 
@@ -69,6 +72,7 @@ export default function LoginForm() {
           </div>
           <input type="submit" value="Login" className={LogPage.loginBtn} />
         </form>
+        <div className={LogPage.invalidFeedback}>{authRes}</div>
         <div className={LogPage.FormContent}>
           <Link href="/ForgetPassword">Forget Password</Link>
           <br />

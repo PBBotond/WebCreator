@@ -2,7 +2,7 @@ import { NextApiResponse, NextApiRequest } from "next";
 import dbconnect from '../../../DB/dbconect'
 import connectiondata from '../../../DB/dbconfig'
 
-export default async function SaveNewFile(req: NextApiRequest, res: NextApiResponse) {
+export default async function GetFile(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'GET') {
         const { file } = req.query as { file: string }
         const db = new dbconnect(connectiondata);

@@ -14,14 +14,19 @@ export default async function WipeToken(req: NextApiRequest, res: NextApiRespons
             if (result.status === "OK") {
                 db.delToken(email);
                 console.log("DELETE TOKEN");
-                res.setHeader("Set-Cookie",
+                res.setHeader("Set-Cookie",[
+                cookie.serialize("UserId", "", {
+                    httpOnly: false,
+                    maxAge: -1,
+                     path:"/"
+                }),
                 cookie.serialize("AuthToken", "", {
                     httpOnly: true,
                     maxAge: 0,
                      path:"/"
-                }));
-                
-                
+                })
+                ]);
+
                 res.json({message:"TokenWiped"})
             }
         } else {

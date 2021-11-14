@@ -5,14 +5,14 @@ function handler(error, results, fields) {
   console.log("Handler");
   return results;
 }
-async function SelectAll(server, table, filter = null, where = null) {
+async function SelectAll(server, table, fields = null) {
   var sqlCommand =
-    filter == null
+    fields == null
       ? "SELECT * from " + table
-      : "SELECT * from " + table + " where " + filter + ' = "' + where + '"';
+      : "SELECT * from " + table + " WHERE ?";
   return new Promise((resolve) => {
     var temp = {};
-    server.query(sqlCommand, (error, results, fields) => {
+    server.query(sqlCommand, fields, (error, results, fields) => {
       temp = handler(error, results, fields);
       if (temp.length > 0) {
         if (temp.length == 1) {
@@ -61,14 +61,14 @@ class dbconect {
     this.connectionParams = connectionParams;
     this.server = mysql.createConnection(connectionParams.connectionString);
   }
-  getAll(table) {
-    return SelectAll(this.server, table);
+  async getAll(table) {
+    return await SelectAll(this.server, table);
   }
-  getById(id) {
-    return SelectAll(this.server, "logintable", "id", id);
+  async getById(id) {
+    return await SelectAll(this.server, "logintable", { id });
   }
-  async getUserByEmail(email) {
-    return await SelectAll(this.server, "userauthdata", "userMail", email);
+  async getUserByEmail(userMail) {
+    return await SelectAll(this.server, "userauthdata", { userMail });
   }
   async regNewUser(dataLine) {
     return await InsertInto(this.server, "userauthdata", {
@@ -95,32 +95,20 @@ class dbconect {
       userLastToken,
     });
   }
-  delToken(mail) {
-    return new Promise((resolve) => {
-      var temp = {};
-      const actualDate = new Date().toISOString();
-      this.server.query(
-        'UPDATE logintable SET LastLoginDtu = "' +
-          actualDate +
-          '", userLastToken = "' +
-          "" +
-          '" WHERE userMail = "' +
-          mail +
-          '"',
-        (error, results, fields) => {
-          temp = handler(error, results, fields);
-          console.log("Update");
-          console.log(temp);
-          if (temp.changedRows === 1) {
-            temp = { status: "OK" };
-          }
-          resolve(temp);
-        }
-      );
-    });
+  async delToken(userMail) {
+    const LastLoginDtu = new Date().toISOString();
+    return await Update(
+      this.server,
+      "logintable",
+      { LastLoginDtu, userLastToken: "" },
+      { userMail }
+    );
   }
   async getFile(id) {
-    return await SelectAll(this.server, "savedfiles", "id", id);
+    return await SelectAll(this.server, "savedfiles", { id });
+  }
+  async getFileByUser(userId) {
+    return await SelectAll(this.server, "savedfiles", { userId });
   }
   async saveNewFile(fileName, type, userId, filePath) {
     return await InsertInto(this.server, "savedfiles", {

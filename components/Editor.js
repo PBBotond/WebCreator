@@ -5,12 +5,37 @@ const base_html =
   '<!DOCTYPE html><html lang="en">\n<head>\n<meta charset="UTF-8">\n<meta http-equiv="X-UA-Compatible" content="IE=edge">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>Document</title>\n</head>\n<body>\n</body>\n \n</html>';
 const base_js = "";
 const base_css = "";
-const MonacoEditor = () => {
+
+const MonacoEditor = (props) => {
   const router = useRouter();
   const [SelectedLang, setSelectedLang] = useState("html");
   const [baseContent, setBaseContent] = useState("");
+  const [fileName, setfileName] = useState("");
+  const [tempFileContent, settempFileContent] = useState("");
+  function CheckFileName(name) {
+    if (name != "") {
+      const type = name.split(".").pop();
+      return type == "html" || type == "js" || type == "css";
+    }
+    return false;
+  }
+  function saveActualFile() {
+    const fileType = fileName.split(".").pop();
+    fetch("api/database/SaveNewFile", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({
+        fileName,
+        type: fileType == "" ? "dir" : fileType,
+        userId: props.userId,
+        filePath: "DB/SavedFiles/" + props.userId,
+      }),
+    }).then(() => props.refreshFiles());
+  }
   function refreshEditorContent(SelectedLang) {
-    fetch("api/getSavedData", {
+    fetch("api/getSavedData/" + props.userId, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -19,8 +44,8 @@ const MonacoEditor = () => {
     })
       .then((responze) => responze.json())
       .then((data) => {
-        //console.log(data.data);
-        if (data.data != "" || data.data == null || data.data == undefined) {
+        console.log(data);
+        if (data.data != ".") {
           setBaseContent(data.data);
         } else {
           switch (SelectedLang) {
@@ -36,7 +61,6 @@ const MonacoEditor = () => {
             default:
               break;
           }
-          setBaseContent();
         }
       });
   }
@@ -57,16 +81,44 @@ const MonacoEditor = () => {
   //Sima OnChange müvelet de nem baj ha itt van legalább látszik
   function handleEditorChange(value, event) {
     //console.log("here is the current model value:", value);
+    settempFileContent(value);
     fetch("/api/saveData", {
       headers: {
         "Content-Type": "application/json",
       },
       method: "POST",
-      body: JSON.stringify({ language: SelectedLang, editorContent: value }),
+      body: JSON.stringify({
+        language: SelectedLang,
+        editorContent: value,
+        userId: props.userId,
+      }),
     });
   }
   return (
     <>
+      <input type="text" onChange={(e) => setfileName(e.target.value)} />
+      <button
+        onClick={() => {
+          if (CheckFileName(fileName)) {
+            saveActualFile();
+          } else {
+            console.log("Not valid name");
+          }
+        }}
+      >
+        Save as File
+      </button>
+      <button
+        onClick={() => {
+          if (fileName !== "") {
+            saveActualFile();
+          } else {
+            console.log("Name Required!");
+          }
+        }}
+      >
+        Save as Folder
+      </button>
       <button
         onClick={() => {
           setSelectedLang("html");
